@@ -11,6 +11,7 @@ const port = parseInt(args[1]);
 
 let homeContent = "";
 let projectContent = "";
+let registrationContent = ""; // Add this line
 
 fs.readFile("home.html", (err, home) => {
   if (err) {
@@ -20,17 +21,18 @@ fs.readFile("home.html", (err, home) => {
 });
 
 fs.readFile("project.html", (err, project) => {
-  if (err) {
-    throw err;
-  }
-  projectContent = project;
-});
-fs.readFile("registration.html", (err, registration) => {
     if (err) {
       throw err;
     }
-    registrationContent = registration;
+    projectContent = project;
   });
+
+fs.readFile("registration.html", (err, registration) => {
+      if (err) {
+        throw err;
+      }
+      registrationContent = registration;
+    });
 
 http.createServer((request, response) => {
   let url = request.url;
@@ -49,5 +51,11 @@ http.createServer((request, response) => {
       response.end();
       break;
   }
-}).listen(port);
+  }).listen(port, () => {
+  console.log(`Server is listening on port ${port}`);
+  });
+    
+  
+
+
 
