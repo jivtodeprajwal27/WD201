@@ -1,17 +1,13 @@
+const args = require("minimist")(process.argv.slice(2));
+p = args.port
+console.log(args.port); // prints the value of the --port option
+
 const http = require("http");
 const fs = require("fs");
-const args = process.argv.slice(2);
-
-if (args.length !== 2 || args[0] !== "--port") {
-  console.error("Usage: node index.js --port <port_number>");
-  process.exit(1);
-}
-
-const port = parseInt(args[1]);
 
 let homeContent = "";
 let projectContent = "";
-let registrationContent = ""; // Add this line
+let registrationContent = "";
 
 fs.readFile("home.html", (err, home) => {
   if (err) {
@@ -19,43 +15,34 @@ fs.readFile("home.html", (err, home) => {
   }
   homeContent = home;
 });
-
-fs.readFile("project.html", (err, project) => {
-    if (err) {
-      throw err;
-    }
-    projectContent = project;
-  });
-
 fs.readFile("registration.html", (err, registration) => {
-      if (err) {
-        throw err;
-      }
-      registrationContent = registration;
-    });
-
-http.createServer((request, response) => {
-  let url = request.url;
-  response.writeHead(200, { "Content-Type": "text/html" });
-  switch (url) {
-    case "/project.html":
-      response.write(projectContent);
-      response.end();
-      break;
-    case "/registration.html":
-      response.write(registrationContent);
-      response.end();
-      break;
-    default:
-      response.write(homeContent);
-      response.end();
-      break;
+  if (err) {
+    throw err;
   }
-  }).listen(port, () => {
-  console.log(`Server is listening on port ${port}`);
-  });
-    
-  
-
-
-
+  registrationContent = registration;
+});
+fs.readFile("project.html", (err, project) => {
+  if (err) {
+    throw err;
+  }
+  projectContent = project;
+});
+http.createServer((request, response) => {
+    let url = request.url;
+    response.writeHeader(200, { "Content-Type": "text/html" });
+    switch (url) {
+      case "/project":
+        response.write(projectContent);
+        response.end();
+        break;
+        case "/registration":
+        response.write(registrationContent);
+        response.end();
+        break;
+      default:
+        response.write(homeContent);
+        response.end();
+        break;
+    }
+  })
+  .listen(p);
