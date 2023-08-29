@@ -3,6 +3,12 @@
   "version": "1.0.0",
   "description": "",
   "main": "todo.js",
+  "lint-staged": {
+    "*.js": [
+      "eslint",
+      "prettier --write ."
+    ]
+  },
   "scripts": {
     "test": "jest",
     "prepare": "cd ..&& husky install todo-cli/.husky"
